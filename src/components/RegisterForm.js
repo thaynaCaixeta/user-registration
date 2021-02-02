@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { Button, TextField, Switch, FormControlLabel } from "@material-ui/core/";
 
-function RegisterForm({ onSubmit }) {
+function RegisterForm({ onSubmit, onBlur }) {
 
     const [name, setName] = useState("");
     const [lastName, setlastName] = useState("");
     const [identification, setidentification] = useState("");
     const [promotions, setPromotions] = useState(true);
     const [newsletter, setNewsletter] = useState(true);
+    const [error, setError] = useState({ identification: { valid: true, helperText: "" } });
 
     return (
         <form
@@ -22,7 +23,13 @@ function RegisterForm({ onSubmit }) {
                 onChange={(event) => setlastName(event.target.value)} />
 
             <TextField id="identification" label="Id" variant="outlined" margin="normal" fullWidth
-                onChange={(event) => setidentification(event.target.value)} />
+                onChange={(event) => setidentification(event.target.value)}
+                onBlur={(event) => {
+                    const isValid = onBlur(identification);
+                    setError({ identification: isValid });
+                }}
+                error={!error.identification.valid}
+                helperText={error.identification.helperText} />
 
             <FormControlLabel label="Promotions" control={<Switch name="Promotions" color="primary"
                 checked={promotions}
